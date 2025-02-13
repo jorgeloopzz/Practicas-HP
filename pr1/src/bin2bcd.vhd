@@ -23,7 +23,7 @@ architecture funcional of bin2bcd is
 begin
   signal result                                   : std_logic_vector(11 downto 0) := ((others => '0'));
   signal bcd_u_signal, bcd_d_signal, bcd_c_signal : std_logic_vector(3 downto 0);
-  signal boost                                    : std_logic_vector(3 downto 0) := '0011';
+  signal boost                                    : std_logic_vector(3 downto 0) := "0011";
 
   bcd_u_signal <= result(3 downto 0);
   bcd_d_signal <= result(7 downto 4);
