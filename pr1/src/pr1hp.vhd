@@ -25,6 +25,9 @@ end pr1hp;
 
 architecture top of pr1hp is
 
+  signal signal_bcd_u, signal_bcd_d, signal_bcd_c : std_logic_vector(3 downto 0);
+  signal bcd_u_conv, bcd_d_conv, bcd_c_conv       : std_logic_vector(7 downto 0);
+
   component sseg2disp is
     port (
       clk100 : in std_logic;
@@ -59,49 +62,52 @@ architecture top of pr1hp is
   end component;
 
 begin
-  signal signal_bcd_u, signal_bcd_d, signal_bcd_c : std_logic_vector(3 downto 0);
-  signal bcd_u_conv, bcd_d_conv, bcd_c_conv       : std_logic_vector(7 downto 0);
 
-  conv_bin2bcd : bin2bcd
+  conv_bin2bcd: bin2bcd
   port map
   (
-    bin   => bin;
-    bcd_u => signal_bcd_u;
-    bcd_d => signal_bcd_d;
-    bcd_c => signal_bcd_u;
+    bin   => bin,
+    bcd_u => signal_bcd_u,
+    bcd_d => signal_bcd_d,
+    bcd_c => signal_bcd_u
   );
 
   conv_bcd2sseg_u : bcd2sseg
   port map
   (
-    bcd  => signal_bcd_u;
-    sseg => bcd_u_conv;
+    bcd  => signal_bcd_u,
+    sseg => bcd_u_conv
   );
 
   conv_bcd2sseg_d : bcd2sseg
   port map
   (
-    bcd  => signal_bcd_d;
-    sseg => bcd_d_conv;
+    bcd  => signal_bcd_d,
+    sseg => bcd_d_conv
   );
 
   conv_bcd2sseg_c : bcd2sseg
   port map
   (
-    bcd  => signal_bcd_c;
-    sseg => bcd_c_conv;
+    bcd  => signal_bcd_c,
+    sseg => bcd_c_conv
   );
 
-  sseg2display_comp : sseg2display
+  sseg2display_comp : sseg2disp
   port map
   (
-    clk100 => clk100;
-    rst_n  => rst_n;
-    sseg0  => bcd_u_conv;
-    sseg1  => bcd_d_conv;
-    sseg2  => bcd_c_conv;
-    an     => an;
-    sseg   => sseg;
+    clk100 => clk100,
+    rst_n  => rst_n,
+    sseg0  => bcd_u_conv,
+    sseg1  => bcd_d_conv,
+    sseg2  => bcd_c_conv,
+    sseg3  => "11111111",
+    sseg4  => "11111111",
+    sseg5  => "11111111",
+    sseg6  => "11111111",
+    sseg7  => "11111111",
+    an     => an,
+    sseg   => sseg
   );
 
 end architecture;
