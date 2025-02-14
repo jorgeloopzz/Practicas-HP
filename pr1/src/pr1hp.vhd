@@ -8,6 +8,11 @@
 ------------------------------------------------------
 -- Descripción : Este módulo implementa la función ...
 -------------------------------------------------------
+library ieee;
+  USE ieee.std_logic_1164.all;
+  USE ieee.numeric_std.all;
+  USE WORK.ALL;
+  
 
 entity pr1hp is
   port (
