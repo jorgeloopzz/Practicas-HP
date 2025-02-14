@@ -23,12 +23,12 @@ entity bin2bcd is
 end bin2bcd;
 
 architecture funcional of bin2bcd is
+    signal result                                   : std_logic_vector(11 downto 0) := ((others => '0'));
+    signal bcd_u_signal, bcd_d_signal, bcd_c_signal : std_logic_vector(3 downto 0);
+    signal boost                                    : std_logic_vector(3 downto 0) := "0011";
 
 begin
-  signal result                                   : std_logic_vector(11 downto 0) := ((others => '0'));
-  signal bcd_u_signal, bcd_d_signal, bcd_c_signal : std_logic_vector(3 downto 0);
-  signal boost                                    : std_logic_vector(3 downto 0) := "0011";
-
+ 
   bcd_u_signal <= result(3 downto 0);
   bcd_d_signal <= result(7 downto 4);
   bcd_c_signal <= result(11 downto 8);
@@ -39,14 +39,14 @@ begin
       result(7 - index) <= bin(index);
     end loop;
 
-    if bcd_u_signal > 4 then
-      result(3 downto 0) <= bcd_u_signal + boost;
+    if unsigned(bcd_u_signal) > 4 then
+      result(3 downto 0) <= std_logic_vector(unsigned(bcd_u_signal) + unsigned(boost));
     end if;
-    if bcd_d_signal > 4 then
-      result(7 downto 4) <= bcd_d_signal + boost;
+    if unsigned(bcd_d_signal) > 4 then
+      result(7 downto 4) <=  std_logic_vector(unsigned(bcd_d_signal) + unsigned(boost));
     end if;
-    if bcd_c_signal > 4 then
-      result(11 downto 8) <= bcd_c_signal + boost;
+    if unsigned(bcd_c_signal) > 4 then
+      result(11 downto 8) <=  std_logic_vector(unsigned(bcd_c_signal) + unsigned(boost));
     end if;
   end process;
 
