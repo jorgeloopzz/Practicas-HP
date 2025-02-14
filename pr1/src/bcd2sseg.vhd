@@ -15,3 +15,24 @@ entity bcd2sseg is
     sseg : out std_logic_vector(7 downto 0)
   );
 end bcd2sseg;
+
+architecture funcional of bcd2sseg is
+
+begin
+  process (bcd, sseg)
+  begin
+    case bcd is
+      when "0000" => sseg <= "00000011";
+      when "0001" => sseg <= "10011111";
+      when "0010" => sseg <= "00100101";
+      when "0011" => sseg <= "00001101";
+      when "0100" => sseg <= "10011001";
+      when "0101" => sseg <= "01001001";
+      when "0110" => sseg <= "01000001";
+      when "0111" => sseg <= "00011111";
+      when "1000" => sseg <= "00000001";
+      when others => sseg <= "00011001";
+    end case;
+  end process;
+
+end architecture;
