@@ -9,10 +9,10 @@
 -- Descripción : Este módulo implementa la función ...
 -------------------------------------------------------
 library ieee;
-  USE ieee.std_logic_1164.all;
-  USE ieee.numeric_std.all;
-  USE WORK.ALL;
-  
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use WORK.all;
+
 entity pr1hp is
   port (
     clk100 : in std_logic;
@@ -59,5 +59,49 @@ architecture top of pr1hp is
   end component;
 
 begin
+  signal signal_bcd_u, signal_bcd_d, signal_bcd_c : std_logic_vector(3 downto 0);
+  signal bcd_u_conv, bcd_d_conv, bcd_c_conv       : std_logic_vector(7 downto 0);
+
+  conv_bin2bcd : bin2bcd
+  port map
+  (
+    bin   => bin;
+    bcd_u => signal_bcd_u;
+    bcd_d => signal_bcd_d;
+    bcd_c => signal_bcd_u;
+  );
+
+  conv_bcd2sseg_u : bcd2sseg
+  port map
+  (
+    bcd  => signal_bcd_u;
+    sseg => bcd_u_conv;
+  );
+
+  conv_bcd2sseg_d : bcd2sseg
+  port map
+  (
+    bcd  => signal_bcd_d;
+    sseg => bcd_d_conv;
+  );
+
+  conv_bcd2sseg_c : bcd2sseg
+  port map
+  (
+    bcd  => signal_bcd_c;
+    sseg => bcd_c_conv;
+  );
+
+  sseg2display_comp : sseg2display
+  port map
+  (
+    clk100 => clk100;
+    rst_n  => rst_n;
+    sseg0  => bcd_u_conv;
+    sseg1  => bcd_d_conv;
+    sseg2  => bcd_c_conv;
+    an     => an;
+    sseg   => sseg;
+  );
 
 end architecture;
