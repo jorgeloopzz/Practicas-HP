@@ -23,7 +23,7 @@ end bcd2sseg;
 architecture funcional of bcd2sseg is
 
 begin
-  process (bcd, sseg)
+  process (bcd)
   begin
     case bcd is
       when "0000" => sseg <= "00000011";
@@ -35,7 +35,7 @@ begin
       when "0110" => sseg <= "01000001";
       when "0111" => sseg <= "00011111";
       when "1000" => sseg <= "00000001";
-      when "1002" => sseg <= "00011001";
+      when "1001" => sseg <= "00011001";
       when others => sseg <= "11111111";
     end case;
   end process;
