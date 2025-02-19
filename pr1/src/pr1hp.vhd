@@ -23,7 +23,7 @@ entity pr1hp is
   );
 end pr1hp;
 
-architecture top of pr1hp is
+architecture rtl of pr1hp is
 
   signal signal_bcd_u, signal_bcd_d, signal_bcd_c : std_logic_vector(3 downto 0);
   signal bcd_u_conv, bcd_d_conv, bcd_c_conv       : std_logic_vector(7 downto 0);
@@ -62,7 +62,7 @@ begin
       sseg => bcd_c_conv
     );
 
-  sseg2display_comp : entity work.sseg2disp(funcional)
+  sseg2display_comp : entity work.sseg2disp(rtl)
     port map
     (
       clk100 => clk100,
