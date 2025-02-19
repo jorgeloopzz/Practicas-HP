@@ -38,7 +38,7 @@ begin
       bin   => bin,
       bcd_u => signal_bcd_u,
       bcd_d => signal_bcd_d,
-      bcd_c => signal_bcd_u
+      bcd_c => signal_bcd_c
     );
 
   conv_bcd2sseg_u : entity work.bcd2sseg(funcional)
