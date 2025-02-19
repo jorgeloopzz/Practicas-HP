@@ -26,33 +26,29 @@ architecture funcional of bin2bcd is
 begin
 
   process (bin)
-
-    variable result                                   : unsigned(11 downto 0) := (others => '0');
-    variable bcd_u_signal, bcd_d_signal, bcd_c_signal : unsigned(3 downto 0);
-    variable boost                                    : unsigned(3 downto 0) := "0011";
+    variable result                                   : unsigned(11 downto 0);
+    variable t_bin                                    : std_logic_vector(7 downto 0);
 
   begin
-    for index in 7 downto 0 loop
-      result(7 - index) := bin(index);
-
+    t_bin := bin;
+    result := (OTHERS => '0');
+    for index in 0 to 7 loop
       if result(3 downto 0) > 4 then
-        result(3 downto 0) := result(3 downto 0) + boost;
+        result(3 downto 0) := result(3 downto 0) + "0011";
       end if;
       if result(7 downto 4) > 4 then
-        result(7 downto 4) := result(7 downto 4) + boost;
+        result(7 downto 4) := result(7 downto 4) + "0011";
       end if;
       if result(11 downto 8) > 4 then
-        result(11 downto 8) := result(11 downto 8) + boost;
+        result(11 downto 8) := result(11 downto 8) + "0011";
       end if;
+      result := result(10 downto 0) & t_bin(7);
+      t_bin := t_bin(6 downto 0) & '0';
     end loop;
 
-    bcd_u_signal := result(3 downto 0);
-    bcd_d_signal := result(7 downto 4);
-    bcd_c_signal := result(11 downto 8);
-
-    bcd_u <= std_logic_vector(bcd_u_signal);
-    bcd_d <= std_logic_vector(bcd_d_signal);
-    bcd_c <= std_logic_vector(bcd_c_signal);
+    bcd_u <= std_logic_vector(result(3 downto 0));
+    bcd_d <= std_logic_vector(result(7 downto 4));
+    bcd_c <= std_logic_vector(result(11 downto 8));
   end process;
 
 end architecture;
