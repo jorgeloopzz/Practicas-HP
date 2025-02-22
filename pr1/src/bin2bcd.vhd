@@ -3,7 +3,7 @@
 -- Fichero : bin2bcd.vhd
 -- Autor : Jorge López Viera
 -- Fecha : 13-02-2025
--- Versión : 0.1
+-- Versión : 0.2
 -- Histórico: 0.1 versión inicial
 ------------------------------------------------------
 -- Descripción : Este módulo implementa la función ...
