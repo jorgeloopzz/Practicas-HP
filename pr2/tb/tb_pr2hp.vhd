@@ -1,12 +1,12 @@
 --------------------------------------------------------------------------
--- Práctica  : PR1 
--- Fichero   : tb_pr1hp.vhd
--- Autor/a   : FBTG
--- Fecha     : 01-10-2024
+-- Práctica  : PR2 
+-- Fichero   : tb_pr2hp.vhd
+-- Autor/a   : Jorge López Viera
+-- Fecha     : 22-02-2025
 -- Versión   : 0.1
 -- Histórico : 0.1 versión inicial
 --------------------------------------------------------------------------
--- Descripción : Entorno de verificación funcional del módulo pr1hp
+-- Descripción : Entorno de verificación funcional del módulo pr2hp
 --------------------------------------------------------------------------
 
 library IEEE;

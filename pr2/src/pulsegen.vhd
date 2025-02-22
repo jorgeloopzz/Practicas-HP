@@ -1,5 +1,5 @@
 -------------------------------------------------------
--- Práctica : práctica2
+-- Práctica : PR2
 -- Fichero : pulsegen.vhd
 -- Autor : Jorge López Viera
 -- Fecha : 22-02-2025
