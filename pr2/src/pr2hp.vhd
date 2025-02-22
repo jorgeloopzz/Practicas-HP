@@ -3,7 +3,7 @@
 -- Fichero : pulsegen.vhd
 -- Autor : Jorge López Viera
 -- Fecha : 22-02-2025
--- Versión : 0.1
+-- Versión : 0.2
 -- Histórico: 0.1 versión inicial
 ------------------------------------------------------
 -- Descripción : Este módulo implementa la función ...
@@ -24,3 +24,20 @@ entity pr2hp is
     sout   : out std_logic
   );
 end pr2hp;
+
+architecture top of pr2hp is
+
+  assert (2 <= N <= 8) report "N is outside the range supported by pulsegen module (2 <= N <= 8)" severity failure;
+
+begin
+
+  pulsegen_comp : entity work.pulsegen(funcional)
+    port map
+    (
+      clk100 => clk100,
+      rst_n  => rst_n,
+      f      => f,
+      sout   => sout
+    );
+
+end architecture;
