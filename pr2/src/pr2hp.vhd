@@ -27,12 +27,13 @@ end pr2hp;
 
 architecture top of pr2hp is
 
-  assert ((N => 2) and (N <= 8)) report "N is outside the range supported by pulsegen module (2 <= N <= 8)" severity failure;
 
 begin
 
+  assert ((N >= 2) and (N <= 8)) report "N is outside the range supported by pulsegen module (2 <= N <= 8)" severity failure;
+
   pulsegen_comp : entity work.pulsegen(funcional)
-    generic (N => N);
+    generic map (N => N)
     port map
     (
       clk100 => clk100,

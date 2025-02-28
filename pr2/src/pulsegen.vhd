@@ -36,13 +36,16 @@ begin
     if rising_edge(clk100) then
       if (rst_n = '0') then
         counter <= ((others => '0'));
-      elsif (rst_n = '1' and counter /= (f - 1)) then
-        counter <= counter + 1;
       else
-        counter <= ((others => '0'));
+        if (counter /= (unsigned(f) - 1)) then
+            counter <= counter + 1;
+        else
+            counter <= ((others => '0'));
+        end if;
       end if;
-    end process;
+    end if;
+  end process;
 
-    sout <= '1' when counter = f - 1 else '0';
+    sout <= '1' when counter = unsigned(f) - 1 else '0';
 
   end architecture;
