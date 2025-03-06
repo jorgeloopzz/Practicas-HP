@@ -26,9 +26,9 @@ entity vgacontroller is
 end entity vgacontroller;
 
 architecture funcional of vgacontroller is
-  signal counter     : std_logic_vector(1 downto 0);
-  signal hor_counter : std_logic_vector(10 downto 0); -- Contador horizontal
-  signal ver_counter : std_logic_vector(10 downto 0); -- Contador vertical
+  signal counter     : unsigned(1 downto 0);
+  signal hor_counter : unsigned(10 downto 0); -- Contador horizontal
+  signal ver_counter : unsigned(10 downto 0); -- Contador vertical
 
 begin
 
@@ -85,7 +85,7 @@ begin
       else
         if enable = '1' then
           if ver_counter = 584 then
-            ver_counter += 1;
+            ver_counter <= ver_counter + 1;
           else
             ver_counter <= (others => '0');
           end if;
