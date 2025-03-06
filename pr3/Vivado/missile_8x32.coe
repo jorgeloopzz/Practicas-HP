@@ -1,0 +1,38 @@
+; Player Memory Map
+; .COE file with hex coefficients
+; Height: 32, Width: 8
+
+memory_initialization_radix=16;
+memory_initialization_vector=
+fc0, fc0, fc0, fc0, fc0, fc0, ec2, ef8, 
+fc0, fc0, fc0, fc0, fc0, fc0, ec2, ef8, 
+fc0, fc0, fc0, fc0, fc0, fc0, ec2, ef8, 
+fc0, fc0, fc0, fc0, fc0, fc0, ec2, ef8, 
+fc0, fc0, fc0, fc0, fc0, fc0, ec2, ef8, 
+fc0, fc0, fc0, fc0, fc0, fc0, ec2, ef8, 
+fc0, fc0, fc0, fc0, fc0, fc0, ec2, ef8, 
+fc0, fc0, fc0, fc0, fc0, fc0, ec1, ed3, 
+fc0, fc0, fc0, fc0, fc0, fc0, fc0, fc0, 
+fc0, fc0, fc0, fc0, fc0, fc0, fc0, fc0, 
+fc0, fc0, fc0, fc0, fc0, fc0, fc0, fc0, 
+fc0, fc0, fc0, fc0, fc0, fc0, fc0, fc0, 
+fc0, fc0, fc0, fc0, fc0, fc0, fc0, fc0, 
+fc0, fc0, fc0, fc0, fc0, fc0, fc0, fc0, 
+fc0, fc0, fc0, fc0, fc0, fc0, fc0, fc0, 
+d40, d40, d50, d50, d50, e50, e50, e50, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11, 
+d11, d11, d11, d11, d11, d11, d11, d11;
