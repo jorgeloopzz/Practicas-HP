@@ -22,7 +22,7 @@ end;
 architecture behavioral of tb_pr2hp is
   signal t_clk100	: std_logic;
   signal t_rst_n	: std_logic;
-  signal N          : integer;
+  constant N          : integer := 8;
   signal t_f        : std_logic_vector(N - 1 downto 0);
   signal s_out      : std_logic;
 	
@@ -93,7 +93,7 @@ begin
         wait until rising_edge(s_out);
         e_TIME := (now - s_TIME)/(Tclk100);
         write(L, e_TIME, LEFT, 15);
-        if 2 /= e_TIME then
+        if 100 /= e_TIME then
             write(L, STRING'("X"), LEFT, 6);
             status := '1';
         end if;
@@ -111,7 +111,7 @@ begin
         wait until rising_edge(s_out);
         e_TIME := (now - s_TIME)/(Tclk100);
         write(L, e_TIME, LEFT, 15);
-        if 2 /= e_TIME then
+        if 250 /= e_TIME then
             write(L, STRING'("X"), LEFT, 6);
             status := '1';
         end if;
