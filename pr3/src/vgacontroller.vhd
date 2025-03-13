@@ -29,6 +29,7 @@ architecture funcional of vgacontroller is
   signal counter     : unsigned(1 downto 0);
   signal hor_counter : unsigned(10 downto 0); -- Contador horizontal
   signal ver_counter : unsigned(10 downto 0); -- Contador vertical
+  signal enable      : std_logic;
 
 begin
 
@@ -41,7 +42,7 @@ begin
       if (rst_n = '0') then
         counter <= (others => '0');
       else
-        if counter < 2 then
+        if counter < CP then
           counter <= counter + 1;
         else
           counter <= (others => '0');
@@ -50,7 +51,8 @@ begin
     end if;
   end process;
 
---  video_on <= '1' when () else '0';
+  enable <= '1' when (counter = 1) else
+    '0';
 
   ------------------------------------------------------
   -- Generador de señal de sincronismo horizontal
@@ -62,7 +64,7 @@ begin
         hor_counter <= (others => '0');
       else
         if enable = '1' then
-          if hor_counter < 1311 then
+          if hor_counter < (HD + HF + HR + HB - 1) then
             hor_counter <= hor_counter + 1;
           else
             hor_counter <= (others => '0');
@@ -72,7 +74,8 @@ begin
     end if;
   end process;
 
-  hsync <= '0' when ((hor_counter >= 1063) and (hor_counter <= 1168)) else '1';
+  hsync <= HP when ((hor_counter >= 1063) and (hor_counter <= 1168)) else
+    (not HP); -- HP = '0'
 
   ------------------------------------------------------
   -- Generador de señal de sincronismo vertical
@@ -84,18 +87,22 @@ begin
         ver_counter <= (others => '0');
       else
         if enable = '1' then
-          if ver_counter = 584 then
-            ver_counter <= ver_counter + 1;
-          else
-            ver_counter <= (others => '0');
+          if hor_counter = (HD + HFP + HR - 1) then
+            if ver_counter < (VD + VF + VR + VB - 1) then
+              ver_counter <= ver_counter + 1;
+            else
+              ver_counter <= (others => '0');
+            end if;
           end if;
         end if;
       end if;
     end if;
   end process;
 
-  vsync <= '0' when ((ver_counter >= 578) and (ver_counter <= 584)) else '1';
+  vsync <= (not VP) when ((ver_counter >= 578) and (ver_counter <= 584)) else
+    VP; -- VP = '1'
 
-  video_on <= '1' when (hor_counter < HD) and (ver_counter < VD) else '0';    
+  video_on <= '1' when (hor_counter < HD) and (ver_counter < VD) else
+    '0';
 
 end architecture;
