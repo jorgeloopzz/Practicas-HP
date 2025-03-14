@@ -11,7 +11,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use WORK.all;
+use WORK.p_galaxian.all;
 
 entity vgacontroller is
   port (
@@ -42,7 +42,7 @@ begin
       if (rst_n = '0') then
         counter <= (others => '0');
       else
-        if counter < CP then
+        if counter < (CP - 1) then
           counter <= counter + 1;
         else
           counter <= (others => '0');
@@ -74,7 +74,7 @@ begin
     end if;
   end process;
 
-  hsync <= HP when ((hor_counter >= 1063) and (hor_counter <= 1168)) else
+  hsync <= HP when ((hor_counter >= HD + HF) and (hor_counter <= HD + HF + HR - 1)) else
     (not HP); -- HP = '0'
 
   ------------------------------------------------------
@@ -87,7 +87,7 @@ begin
         ver_counter <= (others => '0');
       else
         if enable = '1' then
-          if hor_counter = (HD + HFP + HR - 1) then
+          if hor_counter = (HD + HF + HR + HB - 1) then
             if ver_counter < (VD + VF + VR + VB - 1) then
               ver_counter <= ver_counter + 1;
             else
@@ -99,10 +99,13 @@ begin
     end if;
   end process;
 
-  vsync <= (not VP) when ((ver_counter >= 578) and (ver_counter <= 584)) else
+  vsync <= (not VP) when ((ver_counter >= VD + VF) and (ver_counter <= VD + VF + VR - 1)) else
     VP; -- VP = '1'
 
   video_on <= '1' when (hor_counter < HD) and (ver_counter < VD) else
     '0';
+    
+  px_x <= std_logic_vector(hor_counter);
+  px_y <= std_logic_vector(ver_counter);
 
 end architecture;
