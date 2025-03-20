@@ -3,7 +3,7 @@
 -- Fichero : graphics.vhd
 -- Autor : Jorge López Viera
 -- Fecha : 06-03-2025
--- Versión : 0.1
+-- Versión : 0.2
 -- Histórico: 0.1 versión inicial
 ------------------------------------------------------
 -- Descripción : Este módulo implementa la función ...
@@ -103,6 +103,68 @@ begin
     ena   => ship_rom_enable,
     addra => ship_addr,
     douta => ship_rom
+  );
+
+  ------------------------------------------------------
+  -- Generación del misil
+  -------------------------------------------------------
+  missile_rom_enable <= '1' when
+    ((unsigned(px_x) >= unsigned(missile_x)) and
+    (unsigned(px_x) < unsigned(missile_x) + to_unsigned(MISSILE_WIDTH, 11))) and
+    ((unsigned(px_y) >= unsigned(missile_y)) and
+    (unsigned(px_y) < unsigned(missile_y) + to_unsigned(MISSILE_HEIGHT, 11)))
+    else
+    '0';
+
+  missile_relative_x <= std_logic_vector(unsigned(px_x) - unsigned(missile_x)) when
+    (missile_rom_enable = '1') else
+    (others => '0');
+
+  missile_relative_y <= std_logic_vector(unsigned(px_y) - unsigned(missile_y)) when
+    (missile_rom_enable = '1') else
+    (others => '0');
+
+  missile_addr <= missile_relative_y(5 downto 0) & missile_relative_x(5 downto 0);
+
+  -- Componente del misil
+  missile_object : missile_object_rom
+  port map
+  (
+    clka  => clk100,
+    ena   => missile_rom_enable,
+    addra => missile_addr,
+    douta => missile_rom
+  );
+
+  ------------------------------------------------------
+  -- Generación de los aliens
+  -------------------------------------------------------
+  aliens_rom_enable <= '1' when
+    ((unsigned(px_x) >= unsigned(aliens_x)) and
+    (unsigned(px_x) < unsigned(aliens_x) + to_unsigned(ALIENS_WIDTH, 11))) and
+    ((unsigned(px_y) >= unsigned(aliens_y)) and
+    (unsigned(px_y) < unsigned(aliens_y) + to_unsigned(ALIENS_HEIGHT, 11)))
+    else
+    '0';
+
+  aliens_relative_x <= std_logic_vector(unsigned(px_x) - unsigned(aliens_x)) when
+    (aliens_rom_enable = '1') else
+    (others => '0');
+
+  aliens_relative_y <= std_logic_vector(unsigned(px_y) - unsigned(aliens_y)) when
+    (aliens_rom_enable = '1') else
+    (others => '0');
+
+  aliens_addr <= aliens_relative_y(5 downto 0) & aliens_relative_x(5 downto 0);
+
+  -- Componente de los alienígenas
+  aliens_object : aliens_object_rom
+  port map
+  (
+    clka  => clk100,
+    ena   => aliens_rom_enable,
+    addra => aliens_addr,
+    douta => aliens_rom
   );
 
   ------------------------------------------------------
