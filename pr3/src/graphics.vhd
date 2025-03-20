@@ -35,10 +35,42 @@ entity graphics is
 end graphics;
 
 architecture funcional of graphics is
+
+  ------------------------------------------------------
+  -- Señales de la nave
+  -------------------------------------------------------
   signal ship_rom_enable : std_logic;
   signal ship_relative_x : std_logic_vector(10 downto 0);
   signal ship_relative_y : std_logic_vector(10 downto 0);
   signal ship_addr       : std_logic_vector(10 downto 0);
+
+  -- Señal que se conectará a la salida de la ROM de la nave que proporciona
+  -- las componentes RGB de la misma
+  signal ship_rom : std_logic_vector(11 downto 0);
+
+  ------------------------------------------------------
+  -- Señales del misil
+  -------------------------------------------------------
+  signal missile_rom_enable : std_logic;
+  signal missile_relative_x : std_logic_vector(10 downto 0);
+  signal missile_relative_y : std_logic_vector(10 downto 0);
+  signal missile_addr       : std_logic_vector(10 downto 0);
+
+  ------------------------------------------------------
+  -- Señales del alien
+  -------------------------------------------------------
+  signal aliens_rom_enable : std_logic;
+  signal aliens_relative_x : std_logic_vector(10 downto 0);
+  signal aliens_relative_y : std_logic_vector(10 downto 0);
+  signal aliens_addr       : std_logic_vector(10 downto 0);
+
+  -- Señal que se conectará a la salida de la ROM de la nave que proporciona
+  -- las componentes RGB de la misma
+  signal aliens_rom : std_logic_vector(11 downto 0);
+
+  -- Señal que almacena las componentes RGB de las ROMS dependiendo
+  -- de la prioridad
+  signal rgb : std_logic_vector(11 downto 0);
 
 begin
 
@@ -72,5 +104,35 @@ begin
     addra => ship_addr,
     douta => ship_rom
   );
+
+  ------------------------------------------------------
+  -- Prioridad de los objetos
+  -------------------------------------------------------
+  process (ship_x, ship_y, missile_x, missile_y, aliens_x, aliens_y)
+  begin
+    if (video_on = '1') then
+      if (ship_rom_enable = '1') then
+        --- rgb iguales a las componentes de la rom ship_object_rom
+        rgb <= ship_rom;
+
+      elsif (missile_rom_enable = '1') then
+        --- rgb iguales a las componentes de la rom missile_object_rom
+        rgb <= missile_rom;
+
+      elsif (aliens_rom_enable = '1') then
+        --- rgb iguales a las componentes de la rom alien_object_rom
+        rgb <= aliens_rom;
+
+      else
+        rgb <= (others => '0');
+      end if;
+    else
+      rgb <= (others => '0');
+    end if;
+  end process;
+
+  r <= rgb(11 downto 8);
+  g <= rgb(7 downto 4);
+  b <= rgb(3 downto 0);
 
 end architecture;
