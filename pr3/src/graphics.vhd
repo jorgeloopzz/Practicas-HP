@@ -11,7 +11,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use WORK.all;
+use work.p_galaxian.all;
 
 entity graphics is
   port (
@@ -42,11 +42,20 @@ architecture funcional of graphics is
   signal ship_rom_enable : std_logic;
   signal ship_relative_x : std_logic_vector(10 downto 0);
   signal ship_relative_y : std_logic_vector(10 downto 0);
-  signal ship_addr       : std_logic_vector(10 downto 0);
+  signal ship_addr       : std_logic_vector(11 downto 0);
 
   -- Señal que se conectará a la salida de la ROM de la nave que proporciona
   -- las componentes RGB de la misma
   signal ship_rom : std_logic_vector(11 downto 0);
+  
+  component ship_object_rom
+    port (
+        clka    : in std_logic;
+        ena     : in std_logic;
+        addra   : in std_logic_vector(11 downto 0);
+        douta   : out std_logic_vector(11 downto 0)
+    );
+  end component;
 
   ------------------------------------------------------
   -- Señales del misil
@@ -54,7 +63,18 @@ architecture funcional of graphics is
   signal missile_rom_enable : std_logic;
   signal missile_relative_x : std_logic_vector(10 downto 0);
   signal missile_relative_y : std_logic_vector(10 downto 0);
-  signal missile_addr       : std_logic_vector(10 downto 0);
+  signal missile_addr       : std_logic_vector(7 downto 0);
+  
+  signal missile_rom       : std_logic_vector(11 downto 0);
+
+  component missile_object_rom
+    port (
+        clka    : in std_logic;
+        ena     : in std_logic;
+        addra   : in std_logic_vector(7 downto 0);
+        douta   : out std_logic_vector(11 downto 0)
+    );
+  end component;
 
   ------------------------------------------------------
   -- Señales del alien
@@ -62,15 +82,26 @@ architecture funcional of graphics is
   signal aliens_rom_enable : std_logic;
   signal aliens_relative_x : std_logic_vector(10 downto 0);
   signal aliens_relative_y : std_logic_vector(10 downto 0);
-  signal aliens_addr       : std_logic_vector(10 downto 0);
+  signal aliens_addr       : std_logic_vector(11 downto 0);
 
   -- Señal que se conectará a la salida de la ROM de la nave que proporciona
   -- las componentes RGB de la misma
   signal aliens_rom : std_logic_vector(11 downto 0);
+  
+  signal aliens_pos, aliens_row : std_logic_vector(4 downto 0);
 
   -- Señal que almacena las componentes RGB de las ROMS dependiendo
   -- de la prioridad
   signal rgb : std_logic_vector(11 downto 0);
+
+  component alien_object_rom
+    port (
+        clka    : in std_logic;
+        ena     : in std_logic;
+        addra   : in std_logic_vector(11 downto 0);
+        douta   : out std_logic_vector(11 downto 0)
+    );
+  end component;
 
 begin
 
@@ -124,7 +155,7 @@ begin
     (missile_rom_enable = '1') else
     (others => '0');
 
-  missile_addr <= missile_relative_y(5 downto 0) & missile_relative_x(5 downto 0);
+  missile_addr <= missile_relative_y(4 downto 0) & missile_relative_x(2 downto 0);
 
   -- Componente del misil
   missile_object : missile_object_rom
@@ -156,9 +187,12 @@ begin
     (others => '0');
 
   aliens_addr <= aliens_relative_y(5 downto 0) & aliens_relative_x(5 downto 0);
+  
+  aliens_pos <= aliens_relative_x(10 downto 6);
+  aliens_row <= aliens_relative_y(10 downto 6);
 
   -- Componente de los alienígenas
-  aliens_object : aliens_object_rom
+  aliens_object : alien_object_rom
   port map
   (
     clka  => clk100,
@@ -166,6 +200,8 @@ begin
     addra => aliens_addr,
     douta => aliens_rom
   );
+  
+  
 
   ------------------------------------------------------
   -- Prioridad de los objetos
@@ -184,6 +220,15 @@ begin
       elsif (aliens_rom_enable = '1') then
         --- rgb iguales a las componentes de la rom alien_object_rom
         rgb <= aliens_rom;
+        
+        --- Determino que aliens de cada fila est�n muertos, y por consiguiente, no se muestran
+        if ((aliens_row = "00000") and (aliens0_alive(TO_INTEGER(unsigned(aliens_pos))) = '0')) then
+            rgb <= (others => '0');
+        elsif ((aliens_row = "00001") and (aliens1_alive(TO_INTEGER(unsigned(aliens_pos))) = '0')) then
+            rgb <= (others => '0');
+        elsif ((aliens_row = "00010") and (aliens2_alive(TO_INTEGER(unsigned(aliens_pos))) = '0')) then
+            rgb <= (others => '0');
+        end if;
 
       else
         rgb <= (others => '0');
