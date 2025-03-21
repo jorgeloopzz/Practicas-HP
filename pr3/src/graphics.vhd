@@ -3,7 +3,7 @@
 -- Fichero : graphics.vhd
 -- Autor : Jorge López Viera
 -- Fecha : 06-03-2025
--- Versión : 0.2
+-- Versión : 0.3
 -- Histórico: 0.1 versión inicial
 ------------------------------------------------------
 -- Descripción : Este módulo implementa la función ...
