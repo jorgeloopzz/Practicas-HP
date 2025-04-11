@@ -1,4 +1,4 @@
-// Incorporación de archivos de cabecera .h
+// Incorporación de archivos de cabecera.h
 #include "xparameters.h"
 #include "xiomodule.h"
 #include "pr3hpAXI.h"
@@ -67,6 +67,12 @@ static void ISR_galaxian( void )
 	// ship.player_shoot, ship.player_right, ship.player_left, sel, start
 	
     // -- Add C code
+    u32 gpi1 = XIOModule_DiscreteRead(&iomodule, 1);
+    start = (gpi1 >> 0) & 0x01;
+    sel = (gpi1 >> 1) & 0x01;
+    ship.player_left = (gpi1 >> 2) & 0x01;
+    ship.player_right = (gpi1 >> 3) & 0x01;
+    ship.player_shoot = (gpi1 >> 4) & 0x01;
 
 	
 	// Actualización de las funciones de control de los objetos ship,
@@ -76,25 +82,56 @@ static void ISR_galaxian( void )
     alien_dead = update_missile_pos ( game_enable, game_over );
 
 
+
     // Actualización del estado de la partida
-	// state, game_enable, game_over, rgb_led, score 
+	// state, game_enable, game_over, rgb_led, score
     switch (state) {
+
       case starting_state:
 
 	    // -- Add C code
+      	game_enable = 0;
+      	game_over = 0;
+    	rgb_led = 0x06;
+    	score = 0;
+
+    	// Pasamos al siguiente estado
+    	if (start == 1) {
+    		state = playing_state;
+    	}
 		
         break;
       case playing_state:
 	  
 	    // -- Add C code
+    	game_enable = 1;
+    	game_over = 0;
+    	rgb_led = 0x02;
+    	if (alien_dead == 1) score++;
 		
+    	// Pasamos al siguiente estado
+    	if (ship_dead == 1 || (
+    			aliens.alive[2] == 0x0000 && aliens.alive[1] == 0x0000 && aliens.alive[0] == 0x0000)
+    			|| score == 30) {
+    		state = gameover_state;
+    	}
+
 		break;
       case gameover_state:
 	  
 	    // -- Add C code
-		
+    	game_enable = 0;
+    	game_over = 1;
+    	rgb_led = 0x04;
+    	score = score;
+
+    	// Pasamos al siguiente estado
+    	if (sel == 1) {
+    	   	state = starting_state;
+    	}
+
 		break;
-        }
+    }
 
 
 	// Actualización de las señales en el puerto GPO1 de la instancia
@@ -102,6 +139,8 @@ static void ISR_galaxian( void )
 	// rgb_led[2:0], score[7:0]
     
 	// -- Add C code
+    u32 gpo1 = (score & 0xFF) | ((rgb_led & 0xFF) << 8);
+    XIOModule_DiscreteWrite(&iomodule, 1, gpo1);
 
 
 
@@ -113,8 +152,14 @@ static void ISR_galaxian( void )
     // slv_reg3 - aliens2_alive[9:0], aliens1_alive[9:0], aliens0_alive[9:0]
 
 	// -- Add C code
-
-
+    u32 slv_reg0 = (ship.p_y << 11) | ship.p_x;
+    PR3HPAXI_mWriteReg(XPAR_PR3HPAXI_0_S00_AXI_BASEADDR, 0, slv_reg0);
+    u32 slv_reg1 = (missile.p_y << 11) | missile.p_x;
+    PR3HPAXI_mWriteReg(XPAR_PR3HPAXI_0_S00_AXI_BASEADDR, 4, slv_reg1);
+    u32 slv_reg2 = (aliens.p_y << 11) | aliens.p_x;
+    PR3HPAXI_mWriteReg(XPAR_PR3HPAXI_0_S00_AXI_BASEADDR, 8, slv_reg2);
+    u32 slv_reg3 = (aliens.alive[2]  << 20) | (aliens.alive[1]  << 10) | aliens.alive[0];
+    PR3HPAXI_mWriteReg(XPAR_PR3HPAXI_0_S00_AXI_BASEADDR, 12, slv_reg3);
 }
 
 
